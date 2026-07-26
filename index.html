@@ -187,7 +187,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
         <button onclick="handleLogin()" class="btn-red w-full py-2.5 rounded-lg text-sm mt-2"><i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK</button>
       </div>
       <div class="mt-6 pt-4 border-t border-white/10">
-        <p class="text-gray-500 text-xs text-center mb-2">admin/admin123 &bull; operator/operator123 &bull; owner/owner123</p>
+        <p class="text-gray-500 text-xs text-center mb-2"> &bull; &bull; </p>
       </div>
     </div>
   </div>
@@ -270,9 +270,9 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 var HARGA_DAFTAR={'Baju Printing':0,'Kolor Printing':0,'Baju Manual':0,'Jaket Printing':0,'Lis Trening':0,'Banner':0,'Sticker':0,'Bendera':0,'Logo Printing':0};
 var PRODUK_LIST=[];for(var _hk in HARGA_DAFTAR)PRODUK_LIST.push(_hk);
 var DAFTAR_USER=[
-  {id:1,username:'admin',password:'admin123',role:'admin',nama:'Administrator'},
-  {id:2,username:'operator',password:'operator123',role:'operator',nama:'Operator'},
-  {id:3,username:'owner',password:'owner123',role:'owner',nama:'Owner'}
+  {id:1,username:'adminecosport',password:'ecosport123',role:'admin',nama:'Administrator'},
+  {id:2,username:'operatorecosport',password:'ecosport123',role:'operator',nama:'Operator'},
+  {id:3,username:'ecosport',password:'ecosport123',role:'owner',nama:'Owner'}
 ];
 var MENU_LIST=[
   {id:'dashboard',icon:'fa-gauge-high',label:'Dashboard',role:''},
