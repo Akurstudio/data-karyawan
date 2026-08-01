@@ -312,6 +312,7 @@ var currentUser=null;
 var confirmCallback=null;
 var chartInstances={};
 var grafikState={periode:'bulanan',customStart:'',customEnd:'',bagian:'',karyawan:'',produk:'',chartType:'bar',palette:'merah',showGrid:true,showLabels:false,showAnimation:false,sortBy:'nama'};
+var editingProdId = null; // State untuk edit produksi
 
 // Caching data locally to avoid excessive fetch requests
 var localCache = {
@@ -588,7 +589,10 @@ function renderProduksi(){
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Harga/PCS</label><input id="prodHarga" type="number" min="0" oninput="calcProduksiTotal()" placeholder="0" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition"></div>'+
       '<div class="bg-gray-50 rounded-lg p-3 border border-gray-100"><div class="flex justify-between"><span class="text-gray-500 text-sm">Total Upah</span><span id="prodTotal" class="font-display font-bold text-red-600 text-lg">Rp 0</span></div></div>'+
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Keterangan</label><input id="prodKet" type="text" placeholder="Opsional" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition"></div>'+
-      '<button onclick="saveProduksi()" class="btn-red w-full py-2.5 rounded-lg text-sm"><i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN</button>'+
+      '<div class="flex gap-2">'+
+        '<button onclick="resetProduksiForm()" id="btnBatalEdit" class="hidden px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border border-gray-200 flex-1">Batal</button>'+
+        '<button onclick="saveProduksi()" id="btnSaveProduksi" class="btn-red flex-1 py-2.5 rounded-lg text-sm"><i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN</button>'+
+      '</div>'+
     '</div></div></div>'+
     '<div class="lg:col-span-2"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">'+
       '<div class="relative flex-1 max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchProduksi" type="text" placeholder="Cari..." oninput="refreshProduksiTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
@@ -1210,7 +1214,7 @@ function initPageContent(pageId){
     case 'dashboard': initDashboard(); break;
     case 'karyawan': refreshKaryawanTable(); break;
     case 'produksi':
-      document.getElementById('prodTanggal').value=todayStr();
+      resetProduksiForm();
       refreshProduksiTable();
       break;
     case 'rekap':
@@ -1344,6 +1348,34 @@ function calcProduksiTotal(){
   var h=parseInt(document.getElementById('prodHarga').value)||0;
   document.getElementById('prodTotal').textContent=formatRupiah(q*h);
 }
+function resetProduksiForm(){
+  editingProdId=null;
+  document.getElementById('prodTanggal').value=todayStr();
+  document.getElementById('prodKaryawan').value='';
+  document.getElementById('prodJenis').value='';
+  document.getElementById('prodQty').value='';
+  document.getElementById('prodHarga').value='';
+  document.getElementById('prodKet').value='';
+  document.getElementById('prodTotal').textContent='Rp 0';
+  var btnSave=document.getElementById('btnSaveProduksi');if(btnSave)btnSave.innerHTML='<i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN';
+  var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.add('hidden');
+}
+function editProduksi(id){
+  var prod=dbGet('prod',[]);var p=null;
+  for(var i=0;i<prod.length;i++){if(prod[i].id===id){p=prod[i];break}}
+  if(!p)return;
+  editingProdId=id;
+  document.getElementById('prodTanggal').value=p.tanggal;
+  document.getElementById('prodKaryawan').value=p.id_karyawan;
+  document.getElementById('prodJenis').value=p.jenis_produk;
+  document.getElementById('prodQty').value=p.jumlah_pcs;
+  document.getElementById('prodHarga').value=p.harga_pcs;
+  document.getElementById('prodKet').value=p.keterangan||'';
+  calcProduksiTotal();
+  var btnSave=document.getElementById('btnSaveProduksi');if(btnSave)btnSave.innerHTML='<i class="fa-solid fa-floppy-disk mr-1.5"></i>UPDATE';
+  var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 async function saveProduksi(){
   var kid=parseInt(document.getElementById('prodKaryawan').value);
   var jenis=document.getElementById('prodJenis').value;
@@ -1352,16 +1384,21 @@ async function saveProduksi(){
   var tanggal=document.getElementById('prodTanggal').value;
   if(!kid||!jenis||!qty||!tanggal){showToast('Lengkapi semua field wajib','warning');return}
   
-  var prodList = dbGet('prod', []);
-  var maxId = prodList.reduce((max, p) => Math.max(max, p.id), 0);
-  var newId = maxId + 1;
-
-  var obj={id:newId, tanggal:tanggal, id_karyawan:kid, jenis_produk:jenis, jumlah_pcs:qty, harga_pcs:harga, total_upah:qty*harga, keterangan:document.getElementById('prodKet').value.trim()};
+  var obj={tanggal:tanggal,id_karyawan:kid,jenis_produk:jenis,jumlah_pcs:qty,harga_pcs:harga,total_upah:qty*harga,keterangan:document.getElementById('prodKet').value.trim()};
   
-  await dbSaveSupabase('prod', obj);
-  
-  document.getElementById('prodQty').value='';document.getElementById('prodKet').value='';document.getElementById('prodTotal').textContent='Rp 0';
-  refreshProduksiTable();showToast('Produksi berhasil dicatat');
+  if(editingProdId){
+    obj.id=editingProdId;
+    await dbSaveSupabase('prod',obj);
+    showToast('Data produksi diperbarui');
+  } else {
+    var prodList=dbGet('prod',[]);
+    var maxId=prodList.reduce((max,p)=>Math.max(max,p.id),0);
+    obj.id=maxId+1;
+    await dbSaveSupabase('prod',obj);
+    showToast('Produksi berhasil dicatat');
+  }
+  resetProduksiForm();
+  refreshProduksiTable();
 }
 function deleteProduksi(id){
   showConfirm('Hapus data produksi ini?', async function(){
@@ -1380,7 +1417,7 @@ function refreshProduksiTable(){
   if(!body)return;
   if(filtered.length===0){body.innerHTML='';empty.classList.remove('hidden');return}
   empty.classList.add('hidden');var h='';var max=Math.min(filtered.length,50);
-  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center"><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
+  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center"><button onclick="editProduksi('+p.id+')" class="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
   body.innerHTML=h;
 }
 
