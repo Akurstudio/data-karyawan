@@ -268,7 +268,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 /* ================================================================
    KONFIGURASI DATA
    ================================================================ */
-var HARGA_DAFTAR={'Baju Printing':0,'Kolor Printing':0,'Baju Manual':0,'Jaket Printing':0,'Celana Trening':0,'Lis Trening':0,'Banner':0,'Sticker':0,'Bendera':0,'Logo Printing':0};
+var HARGA_DAFTAR={'Baju Printing':0,'Kolor Printing':0,'Baju Manual':0,'Jaket Printing':0,'Lis Trening':0,'Banner':0,'Sticker':0,'Bendera':0,'Logo Printing':0};
 var PRODUK_LIST=[];for(var _hk in HARGA_DAFTAR)PRODUK_LIST.push(_hk);
 var DAFTAR_USER=[
   {id:1,username:'adminecosport',password:'ecosport123',role:'admin',nama:'Administrator'},
@@ -338,7 +338,7 @@ function refreshAllChartColors(){
   var keys=Object.keys(chartInstances);
   for(var i=0;i<keys.length;i++){
     try{var ch=chartInstances[keys[i]];
-      if(ch.options&&ch.options.scales){var sn=Object.keys(ch.options.scales);for(var j=0;j<sn.length;j++){var sc=ch.options.scales[sn[j]];if(sc.grid)sc.grid.color=gc;if(sc.ticks)sc.ticks.color=tc;if(sc.angleLines)sc.angleLines.color=gc;if(sc.pointLabels)sc.pointLabels.color=tc}}
+      if(ch.options&&ch.options.scales){var sn=Object.keys(ch.options.scales);for(var j=0;j<sn.length;j++){var sc=ch.options.scales[sn[j]];if(sc.grid)sc.grid.color=gc;if(sc.ticks)sc.ticks.color=tc;if(sc.angleLines)sc.angleLines.color=gc;if(sc.pointLabels)sc.pointLabels.color=tc} }
       if(ch.options&&ch.options.plugins&&ch.options.plugins.legend&&ch.options.plugins.legend.labels)ch.options.plugins.legend.labels.color=tc;
       ch.update('none');
     }catch(e){}
@@ -467,7 +467,8 @@ function toggleLoginPass(){
     icon.classList.remove('fa-eye-slash');
     icon.classList.add('fa-eye');
   }
-}async function handleLogin(){
+}
+async function handleLogin(){
   var u=document.getElementById('loginUser').value.trim();
   var p=document.getElementById('loginPass').value.trim();
   var errEl=document.getElementById('loginError');errEl.classList.add('hidden');
@@ -618,7 +619,9 @@ function renderKeuangan(){
 }
 function initKeuangan(){
   var el=function(id){return document.getElementById(id)};
-  if(el('keuBulan'))el('keuBulan').value=currentMonthStr();
+  /* FIX: Hanya set nilai bulan jika field masih kosong (first load), 
+     jangan timpa pilihan user saat ganti bulan */
+  if(el('keuBulan') && !el('keuBulan').value)el('keuBulan').value=currentMonthStr();
   var prod=dbGet('prod',[]);var kar=dbGet('kar',[]);
   var ms=(el('keuBulan')||{}).value||currentMonthStr();var mr=monthRange(ms);
   var wr=weekRange(),dr=dayRange(todayStr());
