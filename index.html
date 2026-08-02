@@ -20,7 +20,7 @@ tailwind.config={theme:{extend:{colors:{eco:{black:'#0a0a0a',red:'#dc2626',gray:
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:#f5f5f5;overflow-x:hidden;transition:background .3s,color .3s}
 h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
-::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 @keyframes pulseRed{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}50%{box-shadow:0 0 25px 8px rgba(220,38,38,.08)}}
 @keyframes slideUp{from{transform:translateY(15px);opacity:0}to{transform:translateY(0);opacity:1}}
@@ -82,6 +82,18 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 .chart-box:hover{box-shadow:0 8px 30px rgba(0,0,0,.06)}
 .chart-box h4{font-size:13px;font-weight:600;color:#171717;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .chart-box h4 i{font-size:14px;opacity:.6}
+
+/* MOBILE OPTIMIZATION */
+.overflow-x-auto{-webkit-overflow-scrolling:touch}
+@media (max-width: 640px) {
+  .chart-box { padding: 12px; }
+  .chart-box h4 { font-size: 12px; }
+  .stat-card { padding: 14px; }
+  .stat-card p { font-size: 1.5rem; }
+  .data-table th, .data-table td { padding: 8px 10px; font-size: 11px; white-space: nowrap; }
+  .modal-box { max-height: 90vh; overflow-y: auto; }
+  .chart-type-btn { padding: 4px 8px; font-size: 11px; }
+}
 
 /* DARK MODE */
 [data-theme="dark"] .border-amber-200{border-color:#78350f!important}
@@ -179,13 +191,13 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
       <h1 class="text-3xl font-display font-bold text-white tracking-tight">ECO SPORT</h1>
       <p class="text-gray-400 text-sm mt-1">Sistem Penghitungan Produksi Karyawan</p>
     </div>
-    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-8">
+    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8">
       <h2 class="text-white font-display font-semibold text-lg mb-6">Masuk ke Sistem</h2>
       <div class="space-y-4">
         <div><label class="block text-gray-400 text-sm mb-1.5">Username</label><div class="relative"><i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i><input id="loginUser" type="text" placeholder="Masukkan username" class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-600 text-sm focus:border-red-500 outline-none transition"></div></div>
         <div><label class="block text-gray-400 text-sm mb-1.5">Password</label><div class="relative"><i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i><input id="loginPass" type="password" placeholder="Masukkan password" class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-gray-600 text-sm focus:border-red-500 outline-none transition" onkeydown="if(event.key==='Enter')handleLogin()"><button onclick="toggleLoginPass()" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition cursor-pointer" style="background:none;border:none;padding:0"><i id="togglePassIcon" class="fa-solid fa-eye text-sm"></i></button></div></div>
         <div id="loginError" class="hidden text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3"><i class="fa-solid fa-circle-exclamation mr-1"></i><span></span></div>
-<button onclick="handleLogin()" class="btn-red w-full py-2.5 rounded-lg text-sm mt-2"><i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK</button>
+<button onclick="handleLogin()" class="btn-red w-full py-3 rounded-lg text-sm mt-2"><i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK</button>
       </div>
       <div class="mt-6 pt-4 border-t border-white/10">
         <p class="text-gray-500 text-xs text-center mb-2"> &bull; &bull; </p>
@@ -206,12 +218,12 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
     <header class="bg-white border-b border-gray-200 px-4 lg:px-6 py-3 flex items-center justify-between sticky top-0 z-20 no-print">
       <div class="flex items-center gap-3">
         <button onclick="toggleSidebar()" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 cursor-pointer"><i class="fa-solid fa-bars text-gray-600"></i></button>
-        <div><h1 id="pageTitle" class="font-display font-bold text-gray-900 text-lg">Dashboard</h1><p id="pageSub" class="text-gray-400 text-xs"></p></div>
+        <div><h1 id="pageTitle" class="font-display font-bold text-gray-900 text-base sm:text-lg">Dashboard</h1><p id="pageSub" class="text-gray-400 text-xs hidden sm:block"></p></div>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 sm:gap-3">
         <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark mode"><i class="fa-solid fa-sun t-icon t-sun"></i><i class="fa-solid fa-moon t-icon t-moon"></i></button>
         <span id="saveIndicator" class="hidden text-green-600 text-xs font-medium"><i class="fa-solid fa-check-circle mr-1"></i>Tersimpan</span>
-        <span id="topDateDisplay" class="text-gray-500 text-xs hidden sm:block"></span>
+        <span id="topDateDisplay" class="text-gray-500 text-xs hidden md:block"></span>
       </div>
     </header>
     <main class="flex-1 p-4 lg:p-6 overflow-y-auto" id="mainContent"></main>
@@ -255,7 +267,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 </div>
 
 <!-- ==================== TOAST ==================== -->
-<div id="toastContainer" class="fixed top-4 right-4 z-[100] space-y-2 pointer-events-none"></div>
+<div id="toastContainer" class="fixed top-4 right-4 left-4 sm:left-auto z-[100] space-y-2 pointer-events-none sm:max-w-xs"></div>
 
 <script>
 /* ================================================================
@@ -268,7 +280,7 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 /* ================================================================
    KONFIGURASI DATA
    ================================================================ */
-var HARGA_DAFTAR={'Baju Printing':0,'Kolor Printing':0,'Celana Trening':0,'Baju Manual':0,'Jaket Printing':0,'Lis Trening':0,'Banner':0,'Sticker':0,'Bendera':0,'Logo Printing':0};
+var HARGA_DAFTAR={'Baju Printing':0,'Kolor Printing':0,'Baju Manual':0,'Jaket Printing':0,'Lis Trening':0,'Banner':0,'Sticker':0,'Bendera':0,'Logo Printing':0};
 var PRODUK_LIST=[];for(var _hk in HARGA_DAFTAR)PRODUK_LIST.push(_hk);
 var DAFTAR_USER=[
   {id:1,username:'adminecosport',password:'ecosport123',role:'admin',nama:'Administrator'},
@@ -547,13 +559,13 @@ function renderPage(pageId){
 }
 
 function statCardHtml(label,elemId,icon,iconColor,iconBg,targetPage){
-  return'<div class="stat-card bg-white rounded-xl p-5 border border-gray-100" onclick="navigateFromCard(\''+targetPage+'\')"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">'+label+'</span><div class="w-10 h-10 '+iconBg+' rounded-xl flex items-center justify-center"><i class="fa-solid '+icon+' '+iconColor+'"></i></div></div><p id="'+elemId+'" class="text-3xl font-display font-bold text-gray-900">0</p><p class="text-gray-400 text-xs mt-1.5"><i class="fa-solid fa-arrow-right mr-1"></i>Lihat detail</p></div>';
+  return'<div class="stat-card bg-white rounded-xl p-5 border border-gray-100" onclick="navigateFromCard(\''+targetPage+'\')"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">'+label+'</span><div class="w-10 h-10 '+iconBg+' rounded-xl flex items-center justify-center"><i class="fa-solid '+icon+' '+iconColor+'"></i></div></div><p id="'+elemId+'" class="text-2xl sm:text-3xl font-display font-bold text-gray-900">0</p><p class="text-gray-400 text-xs mt-1.5"><i class="fa-solid fa-arrow-right mr-1"></i>Lihat detail</p></div>';
 }
 function progressBarHtml(label,pct,colorClass){
   return'<div><div class="flex justify-between text-xs mb-1"><span class="text-gray-700 font-medium">'+label+'</span><span class="font-semibold text-gray-700">'+pct+'%</span></div><div class="w-full bg-gray-100 rounded-full h-2.5"><div class="prog-bar '+colorClass+' h-2.5 rounded-full" style="width:0%"></div></div></div>';
 }
 function renderDashboard(){
-  return'<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">'+
+  return'<div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6">'+
     statCardHtml('Karyawan Aktif','statKaryawan','fa-users','text-red-600','bg-red-50','karyawan')+
     statCardHtml('Produksi Hari Ini','statHarian','fa-shirt','text-blue-500','bg-blue-50','produksi')+
     statCardHtml('Produksi Bulan Ini','statBulanan','fa-boxes-stacked','text-amber-500','bg-amber-50','rekap')+
@@ -571,7 +583,7 @@ function renderDashboard(){
 function renderKaryawan(){
   var isAdmin=hasRole('admin');
   return'<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">'+
-    '<div class="relative flex-1 max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchKaryawan" type="text" placeholder="Cari karyawan..." oninput="refreshKaryawanTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
+    '<div class="relative w-full sm:flex-1 sm:max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchKaryawan" type="text" placeholder="Cari karyawan..." oninput="refreshKaryawanTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
     (isAdmin?'<button onclick="openKaryawanModal()" class="btn-red px-4 py-2.5 rounded-lg text-sm whitespace-nowrap"><i class="fa-solid fa-user-plus mr-1.5"></i>Tambah Karyawan</button>':'')+
   '</div>'+
   '<div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-4 py-3 text-left">ID</th><th class="px-4 py-3 text-left">Nama</th><th class="px-4 py-3 text-left">Bagian</th><th class="px-4 py-3 text-left">No. HP</th><th class="px-4 py-3 text-left">Status</th>'+(isAdmin?'<th class="px-4 py-3 text-center">Aksi</th>':'')+'</tr></thead><tbody id="karyawanTableBody"></tbody></table></div><div id="karyawanEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-users-slash text-3xl mb-3 block"></i><p>Belum ada data</p></div></div>';
@@ -581,7 +593,7 @@ function renderProduksi(){
   for(var i=0;i<kar.length;i++)if(kar[i].status==='Aktif')opts+='<option value="'+kar[i].id+'">'+kar[i].nama+' ('+kar[i].bagian+')</option>';
   var prodOpts='';for(var j=0;j<PRODUK_LIST.length;j++)prodOpts+='<option value="'+PRODUK_LIST[j]+'">'+PRODUK_LIST[j]+'</option>';
   return'<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">'+
-    '<div class="lg:col-span-1"><div class="bg-white rounded-xl p-5 border border-gray-100 sticky top-24"><h3 class="font-display font-semibold text-gray-900 mb-4">Input Produksi</h3><div class="space-y-3">'+
+    '<div class="lg:col-span-1"><div class="bg-white rounded-xl p-5 border border-gray-100 lg:sticky lg:top-24"><h3 class="font-display font-semibold text-gray-900 mb-4">Input Produksi</h3><div class="space-y-3">'+
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Tanggal</label><input id="prodTanggal" type="date" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition"></div>'+
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Karyawan</label><select id="prodKaryawan" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition bg-white"><option value="">-- Pilih --</option>'+opts+'</select></div>'+
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Jenis Produk</label><select id="prodJenis" onchange="onProdukJenisChange()" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition bg-white"><option value="">-- Pilih --</option>'+prodOpts+'</select></div>'+
@@ -595,17 +607,17 @@ function renderProduksi(){
       '</div>'+
     '</div></div></div>'+
     '<div class="lg:col-span-2"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">'+
-      '<div class="relative flex-1 max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchProduksi" type="text" placeholder="Cari..." oninput="refreshProduksiTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
-      '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition">'+
+      '<div class="relative w-full sm:flex-1 sm:max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchProduksi" type="text" placeholder="Cari..." oninput="refreshProduksiTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
+      '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition w-full sm:w-auto">'+
     '</div><div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-3 py-3 text-left">Tanggal</th><th class="px-3 py-3 text-left">Karyawan</th><th class="px-3 py-3 text-left">Produk</th><th class="px-3 py-3 text-right">PCS</th><th class="px-3 py-3 text-right">Harga</th><th class="px-3 py-3 text-right">Total</th>'+(hasRole('admin,operator')?'<th class="px-3 py-3 text-center">Aksi</th>':'')+'</tr></thead><tbody id="produksiTableBody"></tbody></table></div><div id="produksiEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-box-open text-3xl mb-3 block"></i><p>Belum ada data</p></div></div></div>'+
   '</div>';
 }
 function renderKeuangan(){
-  return'<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">'+
-    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Hari Ini</span><div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar-day text-red-600"></i></div></div><p id="keuHarian" class="text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
-    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Minggu Ini</span><div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar-week text-amber-500"></i></div></div><p id="keuMingguan" class="text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
-    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Bulan Ini</span><div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar text-blue-500"></i></div></div><p id="keuBulanan" class="text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
-    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Total Biaya Produksi</span><div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-coins text-green-500"></i></div></div><p id="keuTotal" class="text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
+  return'<div class="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6">'+
+    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Hari Ini</span><div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar-day text-red-600"></i></div></div><p id="keuHarian" class="text-xl sm:text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
+    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Minggu Ini</span><div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar-week text-amber-500"></i></div></div><p id="keuMingguan" class="text-xl sm:text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
+    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Upah Bulan Ini</span><div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-calendar text-blue-500"></i></div></div><p id="keuBulanan" class="text-xl sm:text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
+    '<div class="stat-card bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><span class="text-gray-500 text-sm">Total Biaya Produksi</span><div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-coins text-green-500"></i></div></div><p id="keuTotal" class="text-xl sm:text-2xl font-display font-bold text-gray-900">Rp 0</p></div>'+
   '</div>'+
   '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">'+
     '<div class="dept-card-desain bg-white rounded-xl p-5 border border-gray-100"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-3"><div class="w-11 h-11 bg-purple-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-palette text-purple-500 text-lg"></i></div><div><p class="text-gray-500 text-xs">Bagian Desain</p><p class="font-display font-bold text-gray-900 text-xl" id="keuDesainBulan">Rp 0</p></div></div><div class="text-right"><p class="text-purple-500 font-semibold text-sm" id="keuDesainPcs">0 PCS</p><p class="text-gray-400 text-xs" id="keuDesainCount">0 karyawan</p></div></div><div class="w-full bg-gray-100 rounded-full h-2"><div id="keuDesainBar" class="prog-bar bg-purple-500 h-2 rounded-full" style="width:0%"></div></div><p class="text-gray-400 text-[10px] mt-1.5" id="keuDesainPct">0% dari total upah</p></div>'+
@@ -623,8 +635,6 @@ function renderKeuangan(){
 }
 function initKeuangan(){
   var el=function(id){return document.getElementById(id)};
-  /* FIX: Hanya set nilai bulan jika field masih kosong (first load), 
-     jangan timpa pilihan user saat ganti bulan */
   if(el('keuBulan') && !el('keuBulan').value)el('keuBulan').value=currentMonthStr();
   var prod=dbGet('prod',[]);var kar=dbGet('kar',[]);
   var ms=(el('keuBulan')||{}).value||currentMonthStr();var mr=monthRange(ms);
@@ -699,6 +709,7 @@ function renderRekap(){
   '<div id="rekapEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-clipboard text-3xl mb-3 block"></i><p>Belum ada data</p></div></div>';
 }
 function renderRanking(){
+  // On mobile, podium cards stack vertically using grid-cols-1 and take full width
   return'<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="rankingPodium"></div><div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="p-4 border-b border-gray-100"><h3 class="font-display font-semibold text-gray-900 text-sm">Daftar Lengkap</h3></div><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-4 py-3 text-center">#</th><th class="px-4 py-3 text-left">Nama</th><th class="px-4 py-3 text-left">Bagian</th><th class="px-4 py-3 text-right">Total PCS</th><th class="px-4 py-3 text-right">Total Upah</th><th class="px-4 py-3 text-left">Performa</th></tr></thead><tbody id="rankingTableBody"></tbody></table></div></div>';
 }
 function renderTarget(){
@@ -1071,9 +1082,9 @@ function renderGrafik(){
   var prodOpts='<option value="">Semua Produk</option>';
   for(var j=0;j<PRODUK_LIST.length;j++)prodOpts+='<option value="'+PRODUK_LIST[j]+'">'+PRODUK_LIST[j]+'</option>';
   return ''+
-  '<div class="bg-white rounded-2xl border border-gray-100 p-5 mb-5">'+
+  '<div class="bg-white rounded-2xl border border-gray-100 p-4 sm:p-5 mb-5">'+
     '<div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSetelanPanel()">'+
-      '<div class="flex items-center gap-3"><div class="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-sliders text-red-600 text-sm"></i></div><div><h3 class="font-display font-semibold text-gray-900 text-sm">Setelan Grafik</h3><p class="text-gray-400 text-[11px]">Sesuaikan tampilan dan filter data</p></div></div>'+
+      '<div class="flex items-center gap-3"><div class="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-sliders text-red-600 text-sm"></i></div><div><h3 class="font-display font-semibold text-gray-900 text-sm">Setelan Grafik</h3><p class="text-gray-400 text-[11px] hidden sm:block">Sesuaikan tampilan dan filter data</p></div></div>'+
       '<button id="setelanToggleIcon" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition"><i class="fa-solid fa-chevron-up text-gray-400 text-xs"></i></button>'+
     '</div>'+
     '<div id="setelanPanel">'+
@@ -1103,19 +1114,19 @@ function renderGrafik(){
           '<button class="color-dot" data-pal="teal" style="background:linear-gradient(135deg,#0d9488,#22d3ee)" onclick="setPalette(\'teal\',this)" title="Teal"></button>'+
         '</div></div>'+
       '</div>'+
-      '<div class="flex flex-wrap items-center gap-5">'+
+      '<div class="flex flex-wrap items-center gap-x-5 gap-y-3">'+
         '<div class="flex items-center gap-2"><button id="gsToggleGrid" class="toggle-sw active" onclick="toggleSwitch(this);onGrafikSettingChange()"></button><span class="text-gray-600 text-xs">Tampilkan Grid</span></div>'+
         '<div class="flex items-center gap-2"><button id="gsToggleLabels" class="toggle-sw" onclick="toggleSwitch(this);onGrafikSettingChange()"></button><span class="text-gray-600 text-xs">Label Data</span></div>'+
         '<div class="flex items-center gap-2"><button id="gsToggleAnim" class="toggle-sw" onclick="toggleSwitch(this);onGrafikSettingChange()"></button><span class="text-gray-600 text-xs">Animasi</span></div>'+
-        '<div class="flex items-center gap-2 ml-auto"><span class="text-gray-500 text-xs">Urutkan:</span><select id="gsSortBy" onchange="onGrafikSettingChange()" class="field-input border border-gray-200 rounded-lg px-3 py-1.5 text-xs transition bg-white"><option value="nama">Nama</option><option value="pcs_desc">PCS Tertinggi</option><option value="pcs_asc">PCS Terendah</option><option value="upah_desc">Upah Tertinggi</option></select></div>'+
+        '<div class="flex items-center gap-2 lg:ml-auto"><span class="text-gray-500 text-xs">Urutkan:</span><select id="gsSortBy" onchange="onGrafikSettingChange()" class="field-input border border-gray-200 rounded-lg px-3 py-1.5 text-xs transition bg-white"><option value="nama">Nama</option><option value="pcs_desc">PCS Tertinggi</option><option value="pcs_asc">PCS Terendah</option><option value="upah_desc">Upah Tertinggi</option></select></div>'+
       '</div>'+
     '</div>'+
   '</div>'+
   '<div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">'+
-    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Total PCS</p><p id="gsSumPcs" class="text-xl font-display font-bold text-gray-900">0</p></div>'+
-    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Total Upah</p><p id="gsSumUpah" class="text-xl font-display font-bold text-gray-900">Rp 0</p></div>'+
-    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Karyawan Aktif</p><p id="gsSumKar" class="text-xl font-display font-bold text-gray-900">0</p></div>'+
-    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Rata-rata/Karyawan</p><p id="gsSumAvg" class="text-xl font-display font-bold text-gray-900">0 PCS</p></div>'+
+    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Total PCS</p><p id="gsSumPcs" class="text-lg sm:text-xl font-display font-bold text-gray-900">0</p></div>'+
+    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Total Upah</p><p id="gsSumUpah" class="text-lg sm:text-xl font-display font-bold text-gray-900">Rp 0</p></div>'+
+    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Karyawan Aktif</p><p id="gsSumKar" class="text-lg sm:text-xl font-display font-bold text-gray-900">0</p></div>'+
+    '<div class="bg-white rounded-xl p-4 border border-gray-100"><p class="text-gray-400 text-[11px] mb-1">Rata-rata/Karyawan</p><p id="gsSumAvg" class="text-lg sm:text-xl font-display font-bold text-gray-900">0 PCS</p></div>'+
   '</div>'+
   '<div class="chart-box mb-5"><h4><i class="fa-solid fa-chart-line text-red-500"></i>Tren Produksi Harian</h4><div style="height:280px;position:relative"><canvas id="chartTren"></canvas></div></div>'+
   '<div class="grid grid-cols-1 lg:grid-cols-5 gap-5 mb-5">'+
@@ -1452,7 +1463,7 @@ function initRanking(){
   var podEl=document.getElementById('rankingPodium');
   if(podEl){
     if(entries.length<3){podEl.innerHTML='<div class="md:col-span-3 text-center text-gray-400 py-8">Minimal 3 karyawan aktif untuk podium</div>'}
-    else{var order=[1,0,2],sizes=['lg:order-2','lg:order-1','lg:order-3'],hts=['text-4xl','text-3xl','text-2xl'],medals=['medal-gold','medal-silver','medal-bronze'],ph='';
+    else{var order=[1,0,2],sizes=['md:order-2','md:order-1','md:order-3'],hts=['text-4xl','text-3xl','text-2xl'],medals=['medal-gold','medal-silver','medal-bronze'],ph='';
     for(var pi=0;pi<3;pi++){var e=entries[order[pi]];ph+='<div class="bg-white rounded-xl p-5 border border-gray-100 text-center '+sizes[pi]+'"><div class="w-14 h-14 '+medals[pi]+' rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold '+hts[pi]+'">'+(order[pi]+1)+'</div><p class="font-display font-bold text-gray-900">'+e.k.nama+'</p><p class="text-gray-400 text-xs mb-2">'+e.k.bagian+'</p><p class="font-display font-bold text-red-600 text-xl">'+formatAngka(e.pcs)+' PCS</p><p class="text-gray-500 text-xs">'+formatRupiah(e.upah)+'</p></div>'}
     podEl.innerHTML=ph}
   }
@@ -1626,7 +1637,7 @@ function refreshLaporanTable(){
   var body=document.getElementById('laporanBody');var foot=document.getElementById('laporanFoot');var empty=document.getElementById('laporanEmpty');var info=document.getElementById('lapInfo');
   if(!body)return;
   if(filtered.length===0){body.innerHTML='';foot.innerHTML='';empty.classList.remove('hidden');if(info)info.textContent='Tidak ada data';return}
-  empty.classList.remove('hidden');
+  empty.classList.add('hidden');
   var ms=(document.getElementById('lapBulan')||{}).value||currentMonthStr();
   var periodLabel=new Date(ms.split('-')[0],parseInt(ms.split('-')[1])-1,1).toLocaleDateString('id-ID',{month:'long',year:'numeric'});
   if(info)info.textContent='Menampilkan '+filtered.length+' data produksi — '+periodLabel;
