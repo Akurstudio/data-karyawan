@@ -252,6 +252,28 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
   </div>
 </div>
 
+<!-- ==================== MODAL DUPLIKASI DATA BULANAN ==================== -->
+<div id="modalDuplicate" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="modal-bg absolute inset-0 bg-black/50" onclick="closeModal('modalDuplicate')"></div>
+  <div class="modal-box relative z-10 bg-white rounded-2xl w-full max-w-md shadow-2xl">
+    <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+      <h3 class="font-display font-semibold text-gray-900">Salin Data Produksi Bulanan</h3>
+      <button onclick="closeModal('modalDuplicate')" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark text-gray-400"></i></button>
+    </div>
+    <div class="p-5 space-y-3">
+      <div><label class="block text-gray-600 text-xs font-medium mb-1">Dari Karyawan (Asal)</label><select id="dupSource" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition bg-white"></select></div>
+      <div class="text-center"><i class="fa-solid fa-arrow-down text-gray-400"></i></div>
+      <div><label class="block text-gray-600 text-xs font-medium mb-1">Ke Karyawan (Tujuan)</label><select id="dupTarget" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition bg-white"></select></div>
+      <div><label class="block text-gray-600 text-xs font-medium mb-1">Pilih Bulan</label><input id="dupMonth" type="month" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition"></div>
+      <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-700 leading-relaxed"><i class="fa-solid fa-circle-info mr-1"></i>Seluruh data produksi karyawan <strong>Asal</strong> di bulan terpilih akan disalin sebagai data baru ke karyawan <strong>Tujuan</strong>.</div>
+    </div>
+    <div class="p-5 border-t border-gray-100 flex gap-2 justify-end">
+      <button onclick="closeModal('modalDuplicate')" class="px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border border-gray-200">Batal</button>
+      <button onclick="handleDuplicateData()" class="btn-red px-5 py-2.5 rounded-lg text-sm"><i class="fa-solid fa-copy mr-1.5"></i>Salin Data</button>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== MODAL KONFIRMASI ==================== -->
 <div id="modalConfirm" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
   <div class="modal-bg absolute inset-0 bg-black/50" onclick="closeModal('modalConfirm')"></div>
@@ -608,7 +630,10 @@ function renderProduksi(){
     '</div></div></div>'+
     '<div class="lg:col-span-2"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">'+
       '<div class="relative w-full sm:flex-1 sm:max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchProduksi" type="text" placeholder="Cari..." oninput="refreshProduksiTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
-      '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition w-full sm:w-auto">'+
+      '<div class="flex gap-2 items-center">'+
+        '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition w-full sm:w-auto">'+
+        (hasRole('admin,operator')?'<button onclick="openDuplicateModal()" class="btn-red px-4 py-2.5 rounded-lg text-sm whitespace-nowrap flex items-center gap-2 cursor-pointer"><i class="fa-solid fa-clone"></i> Salin Data Bulanan</button>':'')+
+      '</div>'+
     '</div><div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-3 py-3 text-left">Tanggal</th><th class="px-3 py-3 text-left">Karyawan</th><th class="px-3 py-3 text-left">Produk</th><th class="px-3 py-3 text-right">PCS</th><th class="px-3 py-3 text-right">Harga</th><th class="px-3 py-3 text-right">Total</th>'+(hasRole('admin,operator')?'<th class="px-3 py-3 text-center">Aksi</th>':'')+'</tr></thead><tbody id="produksiTableBody"></tbody></table></div><div id="produksiEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-box-open text-3xl mb-3 block"></i><p>Belum ada data</p></div></div></div>'+
   '</div>';
 }
@@ -1387,29 +1412,6 @@ function editProduksi(id){
   var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
-// FUNGSI COPY PASTE (DUPLICATE) DATA PRODUKSI
-function copyProduksi(id){
-  var prod=dbGet('prod',[]);var p=null;
-  for(var i=0;i<prod.length;i++){if(prod[i].id===id){p=prod[i];break}}
-  if(!p)return;
-  
-  editingProdId=null; // Set null agar dianggap data baru saat di save
-  document.getElementById('prodTanggal').value=p.tanggal;
-  document.getElementById('prodKaryawan').value=''; // Kosongkan karyawan agar dipilih ulang
-  document.getElementById('prodJenis').value=p.jenis_produk;
-  document.getElementById('prodQty').value=p.jumlah_pcs;
-  document.getElementById('prodHarga').value=p.harga_pcs;
-  document.getElementById('prodKet').value=p.keterangan||'';
-  calcProduksiTotal();
-  
-  var btnSave=document.getElementById('btnSaveProduksi');if(btnSave)btnSave.innerHTML='<i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN';
-  var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.remove('hidden');
-  
-  window.scrollTo({top:0,behavior:'smooth'});
-  showToast('Data berhasil disalin, silakan pilih karyawan lain lalu klik Simpan','info');
-}
-
 async function saveProduksi(){
   var kid=parseInt(document.getElementById('prodKaryawan').value);
   var jenis=document.getElementById('prodJenis').value;
@@ -1451,8 +1453,82 @@ function refreshProduksiTable(){
   if(!body)return;
   if(filtered.length===0){body.innerHTML='';empty.classList.remove('hidden');return}
   empty.classList.add('hidden');var h='';var max=Math.min(filtered.length,50);
-  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center whitespace-nowrap"><button onclick="editProduksi('+p.id+')" class="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="copyProduksi('+p.id+')" class="text-green-500 hover:text-green-700 mr-2 cursor-pointer" title="Salin Data"><i class="fa-solid fa-copy"></i></button><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer" title="Hapus"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
+  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center whitespace-nowrap"><button onclick="editProduksi('+p.id+')" class="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer" title="Hapus"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
   body.innerHTML=h;
+}
+
+// FUNGSI MODAL DUPLIKASI DATA BULANAN
+function openDuplicateModal() {
+  var kar = dbGet('kar', []).filter(k => k.status === 'Aktif');
+  var opts = '<option value="">-- Pilih Karyawan --</option>';
+  for(var i=0; i<kar.length; i++) {
+    opts += '<option value="'+kar[i].id+'">'+kar[i].nama+' ('+kar[i].bagian+')</option>';
+  }
+  document.getElementById('dupSource').innerHTML = opts;
+  document.getElementById('dupTarget').innerHTML = opts;
+  document.getElementById('dupMonth').value = currentMonthStr();
+  document.getElementById('modalDuplicate').classList.remove('hidden');
+}
+
+async function handleDuplicateData() {
+  var srcId = parseInt(document.getElementById('dupSource').value);
+  var tgtId = parseInt(document.getElementById('dupTarget').value);
+  var month = document.getElementById('dupMonth').value;
+  
+  if (!srcId || !tgtId || !month) {
+    showToast('Lengkapi semua field', 'warning');
+    return;
+  }
+  if (srcId === tgtId) {
+    showToast('Karyawan asal dan tujuan tidak boleh sama', 'warning');
+    return;
+  }
+  
+  var srcName = findKaryawan(srcId).nama;
+  var tgtName = findKaryawan(tgtId).nama;
+  
+  showConfirm('Salin SEMUA data produksi ' + srcName + ' ke ' + tgtName + ' untuk bulan ' + month + '?', async function() {
+    showLoading();
+    try {
+      var mr = monthRange(month);
+      var allProd = dbGet('prod', []);
+      var recordsToCopy = allProd.filter(p => p.id_karyawan === srcId && new Date(p.tanggal) >= mr.start && new Date(p.tanggal) <= mr.end);
+      
+      if (recordsToCopy.length === 0) {
+        hideLoading();
+        showToast('Tidak ada data produksi untuk ' + srcName + ' di bulan tersebut', 'warning');
+        return;
+      }
+      
+      var maxId = allProd.reduce((max, p) => Math.max(max, p.id || 0), 0);
+      var newData = recordsToCopy.map(p => {
+        maxId++;
+        return {
+          id: maxId,
+          tanggal: p.tanggal,
+          id_karyawan: tgtId,
+          jenis_produk: p.jenis_produk,
+          jumlah_pcs: p.jumlah_pcs,
+          harga_pcs: p.harga_pcs,
+          total_upah: p.total_upah,
+          keterangan: p.keterangan
+        };
+      });
+      
+      let { error } = await db.from('produksi').insert(newData);
+      if (error) throw error;
+      
+      await fetchAllData();
+      hideLoading();
+      showToast(recordsToCopy.length + ' data berhasil disalin ke ' + tgtName, 'success');
+      closeModal('modalDuplicate');
+      refreshProduksiTable();
+    } catch(e) {
+      console.error("Duplicate Error:", e);
+      showToast('Gagal menduplikasi data: ' + e.message, 'error');
+      hideLoading();
+    }
+  });
 }
 
 /* ================================================================
