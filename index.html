@@ -10,6 +10,7 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+<!-- TAMBAHKAN SUPABASE JS CLIENT -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>
@@ -48,10 +49,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 .badge-inactive{background:#fee2e2;color:#991b1b}
 .btn-red{background:#dc2626;color:#fff;font-weight:600;transition:all .15s;cursor:pointer;box-shadow:0 2px 8px rgba(220,38,38,.3)}
 .btn-red:hover{background:#b91c1c;box-shadow:0 4px 14px rgba(220,38,38,.4);transform:translateY(-1px)}
-.btn-red:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none;transform:none}
-.btn-green{background:#16a34a;color:#fff;font-weight:600;transition:all .15s;cursor:pointer;box-shadow:0 2px 8px rgba(22,163,74,.3)}
-.btn-green:hover{background:#15803d;box-shadow:0 4px 14px rgba(22,163,74,.4);transform:translateY(-1px)}
-.btn-green:disabled{background:#9ca3af;cursor:not-allowed;box-shadow:none;transform:none}
 .field-input:focus{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1);outline:none}
 .medal-gold{background:linear-gradient(135deg,#fbbf24,#f59e0b)}
 .medal-silver{background:linear-gradient(135deg,#d1d5db,#9ca3af)}
@@ -85,6 +82,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 .chart-box:hover{box-shadow:0 8px 30px rgba(0,0,0,.06)}
 .chart-box h4{font-size:13px;font-weight:600;color:#171717;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .chart-box h4 i{font-size:14px;opacity:.6}
+
+/* MOBILE OPTIMIZATION */
 .overflow-x-auto{-webkit-overflow-scrolling:touch}
 @media (max-width: 640px) {
   .chart-box { padding: 12px; }
@@ -95,6 +94,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
   .modal-box { max-height: 90vh; overflow-y: auto; }
   .chart-type-btn { padding: 4px 8px; font-size: 11px; }
 }
+
+/* DARK MODE */
 [data-theme="dark"] .border-amber-200{border-color:#78350f!important}
 [data-theme="dark"] .bg-amber-50{background:#1a1508!important}
 [data-theme="dark"] .text-amber-700{color:#fbbf24!important}
@@ -118,7 +119,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 [data-theme="dark"] .data-table th{background:#1a1a1a!important;color:#e5e5e5!important}
 [data-theme="dark"] .data-table tbody tr:hover{background:#1f1215!important}
 [data-theme="dark"] header{background:#161616!important;border-color:#2a2a2a!important}
-[data-theme="dark"] .field-input,[data-theme="dark"] input:not([type="file"]),[data-theme="dark"] select,[data-theme="dark"] textarea{background:#1e1e1e!important;border-color:#333!important;color:#e5e5e5!important}
+[data-theme="dark"] .field-input,[data-theme="dark"] input:not([type="file"]),[data-theme="dark"] select{background:#1e1e1e!important;border-color:#333!important;color:#e5e5e5!important}
 [data-theme="dark"] .hover\:bg-gray-100:hover{background:#2a2a2a!important}
 [data-theme="dark"] .badge-active{background:#14532d;color:#86efac}
 [data-theme="dark"] .badge-inactive{background:#450a0a;color:#fca5a5}
@@ -167,24 +168,18 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 [data-theme="dark"] .chart-type-btn:hover{border-color:#dc2626;color:#ef4444}
 [data-theme="dark"] .chart-type-btn.active{background:#dc2626;color:#fff;border-color:#dc2626}
 .loading-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center}
-/* Style untuk copy paste modal */
-.paste-textarea{font-family:'Consolas','Monaco',monospace;font-size:13px;line-height:1.5;resize:vertical;min-height:200px}
-.paste-row-valid{background:#f0fdf4}
-.paste-row-invalid{background:#fef2f2}
-.paste-row-invalid:hover{background:#fee2e2!important}
-[data-theme="dark"] .paste-row-valid{background:#052e16!important}
-[data-theme="dark"] .paste-row-invalid{background:#450a0a!important}
-[data-theme="dark"] .paste-row-invalid:hover{background:#5b1414!important}
 </style>
 </head>
 <body>
 
+<!-- LOADING OVERLAY -->
 <div id="loadingOverlay" class="loading-overlay hidden">
   <div class="bg-white rounded-xl p-6 flex items-center gap-4 shadow-2xl">
     <i class="fa-solid fa-spinner fa-spin text-red-600 text-2xl"></i>
     <span class="text-gray-700 font-medium">Memproses data...</span>
   </div>
 </div>
+
 
 <!-- ==================== LOGIN ==================== -->
 <div id="pageLogin" class="login-bg min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
@@ -202,7 +197,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
         <div><label class="block text-gray-400 text-sm mb-1.5">Username</label><div class="relative"><i class="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i><input id="loginUser" type="text" placeholder="Masukkan username" class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-600 text-sm focus:border-red-500 outline-none transition"></div></div>
         <div><label class="block text-gray-400 text-sm mb-1.5">Password</label><div class="relative"><i class="fa-solid fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i><input id="loginPass" type="password" placeholder="Masukkan password" class="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-10 py-2.5 text-white placeholder-gray-600 text-sm focus:border-red-500 outline-none transition" onkeydown="if(event.key==='Enter')handleLogin()"><button onclick="toggleLoginPass()" type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition cursor-pointer" style="background:none;border:none;padding:0"><i id="togglePassIcon" class="fa-solid fa-eye text-sm"></i></button></div></div>
         <div id="loginError" class="hidden text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3"><i class="fa-solid fa-circle-exclamation mr-1"></i><span></span></div>
-        <button onclick="handleLogin()" class="btn-red w-full py-3 rounded-lg text-sm mt-2"><i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK</button>
+<button onclick="handleLogin()" class="btn-red w-full py-3 rounded-lg text-sm mt-2"><i class="fa-solid fa-right-to-bracket mr-2"></i>MASUK</button>
       </div>
       <div class="mt-6 pt-4 border-t border-white/10">
         <p class="text-gray-500 text-xs text-center mb-2"> &bull; &bull; </p>
@@ -257,121 +252,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
   </div>
 </div>
 
-<!-- ==================== MODAL COPY PASTE PRODUKSI ==================== -->
-<div id="modalCopyPaste" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="modal-bg absolute inset-0 bg-black/50" onclick="closeModal('modalCopyPaste')"></div>
-  <div class="modal-box relative z-10 bg-white rounded-2xl w-full max-w-5xl shadow-2xl max-h-[92vh] flex flex-col">
-    <div class="p-5 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center"><i class="fa-solid fa-clipboard text-green-600"></i></div>
-        <div>
-          <h3 class="font-display font-semibold text-gray-900">Copy Paste Data Produksi</h3>
-          <p class="text-gray-400 text-xs">Input massal dari Excel/Spreadsheet</p>
-        </div>
-      </div>
-      <button onclick="closeModal('modalCopyPaste')" class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center cursor-pointer"><i class="fa-solid fa-xmark text-gray-400"></i></button>
-    </div>
-    
-    <div class="p-5 overflow-y-auto flex-1">
-      <!-- Instruksi Format -->
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-        <div class="flex items-start gap-3">
-          <i class="fa-solid fa-circle-info text-blue-500 mt-0.5"></i>
-          <div class="flex-1">
-            <p class="text-blue-900 font-semibold text-sm mb-1">Format Data</p>
-            <p class="text-blue-700 text-xs mb-2">Tempelkan data dengan format tab-separated (default dari Excel). Urutan kolom:</p>
-            <div class="bg-white rounded-md p-2 font-mono text-xs text-gray-700 mb-2 overflow-x-auto">
-              Tanggal &nbsp;&nbsp; Nama Karyawan &nbsp;&nbsp; Jenis Produk &nbsp;&nbsp; Jumlah PCS &nbsp;&nbsp; Harga/PCS &nbsp;&nbsp; Keterangan
-            </div>
-            <div class="flex flex-wrap gap-2">
-              <button onclick="copyPasteTemplate()" class="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition cursor-pointer">
-                <i class="fa-solid fa-copy mr-1"></i>Copy Template
-              </button>
-              <button onclick="downloadPasteTemplate()" class="px-3 py-1.5 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 transition cursor-pointer">
-                <i class="fa-solid fa-file-excel mr-1"></i>Download Excel Template
-              </button>
-              <button onclick="loadPasteExample()" class="px-3 py-1.5 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700 transition cursor-pointer">
-                <i class="fa-solid fa-lightbulb mr-1"></i>Contoh Data
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Textarea Paste -->
-      <div class="mb-4">
-        <label class="block text-gray-600 text-xs font-medium mb-1.5">Tempelkan Data di Sini</label>
-        <textarea id="pasteTextarea" class="paste-textarea field-input w-full border border-gray-200 rounded-lg p-3 text-sm transition" placeholder="Tanggal&#9;Nama Karyawan&#9;Jenis Produk&#9;Jumlah PCS&#9;Harga/PCS&#9;Keterangan&#10;2024-01-15&#9;Budi&#9;Baju Printing&#9;10&#9;5000&#9;-&#10;2024-01-15&#9;Siti&#9;Celana Printing&#9;5&#9;3000&#9;-&#10;&#10;Klik 'Contoh Data' untuk melihat contoh." oninput="autoParsePaste()"></textarea>
-        <div class="flex items-center justify-between mt-2">
-          <p class="text-gray-400 text-xs"><i class="fa-solid fa-keyboard mr-1"></i>Diparse otomatis saat mengetik</p>
-          <div class="flex gap-2">
-            <button onclick="clearPasteData()" class="px-3 py-1.5 text-xs text-gray-600 hover:bg-gray-100 rounded-lg border border-gray-200 cursor-pointer transition">
-              <i class="fa-solid fa-eraser mr-1"></i>Bersihkan
-            </button>
-            <button onclick="parsePastedData()" class="px-3 py-1.5 text-xs bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer transition">
-              <i class="fa-solid fa-play mr-1"></i>Parse Data
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Summary & Action -->
-      <div id="pasteSummary" class="hidden mb-4 grid grid-cols-3 gap-3">
-        <div class="bg-gray-50 rounded-lg p-3 text-center">
-          <p class="text-gray-500 text-xs mb-1">Total Baris</p>
-          <p id="pasteTotalRows" class="text-xl font-display font-bold text-gray-900">0</p>
-        </div>
-        <div class="bg-green-50 rounded-lg p-3 text-center">
-          <p class="text-green-600 text-xs mb-1">Valid</p>
-          <p id="pasteValidRows" class="text-xl font-display font-bold text-green-600">0</p>
-        </div>
-        <div class="bg-red-50 rounded-lg p-3 text-center">
-          <p class="text-red-600 text-xs mb-1">Error</p>
-          <p id="pasteInvalidRows" class="text-xl font-display font-bold text-red-600">0</p>
-        </div>
-      </div>
-
-      <!-- Preview Table -->
-      <div id="pastePreviewWrap" class="hidden">
-        <div class="flex items-center justify-between mb-2">
-          <h4 class="font-display font-semibold text-gray-900 text-sm"><i class="fa-solid fa-table mr-2 text-gray-400"></i>Preview Data</h4>
-          <div class="flex items-center gap-2 text-xs">
-            <span class="flex items-center gap-1 text-green-600"><span class="w-2 h-2 bg-green-500 rounded-full"></span>Valid</span>
-            <span class="flex items-center gap-1 text-red-600"><span class="w-2 h-2 bg-red-500 rounded-full"></span>Error</span>
-          </div>
-        </div>
-        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
-          <div class="overflow-x-auto max-h-64">
-            <table class="data-table w-full text-sm">
-              <thead>
-                <tr>
-                  <th class="px-3 py-2 text-left" style="width:40px">#</th>
-                  <th class="px-3 py-2 text-left">Status</th>
-                  <th class="px-3 py-2 text-left">Tanggal</th>
-                  <th class="px-3 py-2 text-left">Karyawan</th>
-                  <th class="px-3 py-2 text-left">Produk</th>
-                  <th class="px-3 py-2 text-right">PCS</th>
-                  <th class="px-3 py-2 text-right">Harga</th>
-                  <th class="px-3 py-2 text-right">Total</th>
-                  <th class="px-3 py-2 text-left">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody id="pastePreviewBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="p-5 border-t border-gray-100 flex gap-2 justify-end flex-shrink-0">
-      <button onclick="closeModal('modalCopyPaste')" class="px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-100 cursor-pointer border border-gray-200">Tutup</button>
-      <button id="btnSaveBulkProduksi" onclick="saveBulkProduksi()" disabled class="btn-green px-5 py-2.5 rounded-lg text-sm">
-        <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i>SIMPAN <span id="saveBulkCount"></span> DATA
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- ==================== MODAL KONFIRMASI ==================== -->
 <div id="modalConfirm" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
   <div class="modal-bg absolute inset-0 bg-black/50" onclick="closeModal('modalConfirm')"></div>
@@ -393,8 +273,8 @@ h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif}
 /* ================================================================
    KONFIGURASI SUPABASE
    ================================================================ */
-const SUPABASE_URL = 'https://hjjpeusewvjxeenowtay.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqanBldXNld3ZqeGVlbm93dGF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNTEzODEsImV4cCI6MjEwMDYyNzM4MX0.6-rJbgvfv-vW2oeOH9fJ2g1AuSthz6A_7w9N36_j-FM';
+const SUPABASE_URL = 'https://hjjpeusewvjxeenowtay.supabase.co'; // Ganti dengan URL Supabase Anda
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqanBldXNld3ZqeGVlbm93dGF5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUwNTEzODEsImV4cCI6MjEwMDYyNzM4MX0.6-rJbgvfv-vW2oeOH9fJ2g1AuSthz6A_7w9N36_j-FM'; // Ganti dengan Anon Key Supabase Anda
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 /* ================================================================
@@ -444,9 +324,9 @@ var currentUser=null;
 var confirmCallback=null;
 var chartInstances={};
 var grafikState={periode:'bulanan',customStart:'',customEnd:'',bagian:'',karyawan:'',produk:'',chartType:'bar',palette:'merah',showGrid:true,showLabels:false,showAnimation:false,sortBy:'nama'};
-var editingProdId = null;
-var pasteParsedData = []; // State untuk copy paste data
+var editingProdId = null; // State untuk edit produksi
 
+// Caching data locally to avoid excessive fetch requests
 var localCache = {
   kar: [],
   prod: [],
@@ -480,7 +360,7 @@ function refreshAllChartColors(){
 loadSavedTheme();
 
 /* ================================================================
-   SUPABASE INTERACTION
+   SUPABASE INTERACTION (PENGGANTI LOCALSTORAGE)
    ================================================================ */
 function showLoading(){document.getElementById('loadingOverlay').classList.remove('hidden')}
 function hideLoading(){document.getElementById('loadingOverlay').classList.add('hidden')}
@@ -502,6 +382,7 @@ async function fetchAllData(){
   hideLoading();
 }
 
+// dbGet sekarang mengembalikan data dari cache lokal yang disinkronkan dengan Supabase
 function dbGet(k,d){
   if(k==='kar')return localCache.kar;
   if(k==='prod')return localCache.prod;
@@ -523,7 +404,7 @@ async function dbSaveSupabase(table, data){
       if(error) throw error;
     }
     flashSave();
-    await fetchAllData();
+    await fetchAllData(); // Refresh cache
   } catch(e) {
     console.error("Save Error:", e);
     showToast('Gagal menyimpan: '+e.message, 'error');
@@ -536,27 +417,10 @@ async function dbDeleteSupabase(table, id){
   try {
     let res = await db.from(table).delete().eq('id', id);
     if(res.error) throw res.error;
-    await fetchAllData();
+    await fetchAllData(); // Refresh cache
   } catch(e) {
     console.error("Delete Error:", e);
     showToast('Gagal menghapus: '+e.message, 'error');
-  }
-  hideLoading();
-}
-
-// Bulk insert untuk copy paste
-async function dbBulkInsertProduksi(dataArray){
-  showLoading();
-  try {
-    const { error } = await db.from('produksi').insert(dataArray);
-    if(error) throw error;
-    flashSave();
-    await fetchAllData();
-    return true;
-  } catch(e) {
-    console.error("Bulk Insert Error:", e);
-    showToast('Gagal menyimpan bulk: '+e.message, 'error');
-    return false;
   }
   hideLoading();
 }
@@ -576,8 +440,6 @@ function monthRange(ms){var p=ms.split('-').map(Number);return{start:new Date(p[
 function dayRange(ds){var p=ds.split('-').map(Number);var d=new Date(p[0],p[1]-1,p[2]);d.setHours(0,0,0,0);var e=new Date(d);e.setHours(23,59,59,999);return{start:d,end:e}}
 function filterByRange(arr,s,e){return arr.filter(function(p){var d=new Date(p.tanggal);return d>=s&&d<=e})}
 function findKaryawan(id){var k=dbGet('kar',[]);for(var i=0;i<k.length;i++)if(k[i].id===id)return k[i];return null}
-function findKaryawanByNama(nama){var k=dbGet('kar',[]);nama=(nama||'').toLowerCase().trim();for(var i=0;i<k.length;i++)if(k[i].nama.toLowerCase().trim()===nama)return k[i];return null}
-function findProduk(nama){nama=(nama||'').toLowerCase().trim();for(var i=0;i<PRODUK_LIST.length;i++)if(PRODUK_LIST[i].toLowerCase().trim()===nama)return PRODUK_LIST[i];return null}
 function sumPcs(prod,kid,s,e){var t=0;for(var i=0;i<prod.length;i++){if(prod[i].id_karyawan===kid){var d=new Date(prod[i].tanggal);if(d>=s&&d<=e)t+=prod[i].jumlah_pcs}}return t}
 function sumUpah(prod,kid,s,e){var t=0;for(var i=0;i<prod.length;i++){if(prod[i].id_karyawan===kid){var d=new Date(prod[i].tanggal);if(d>=s&&d<=e)t+=prod[i].total_upah}}return t}
 function hasRole(r){if(!currentUser)return false;if(!r)return true;return r.split(',').indexOf(currentUser.role)!==-1}
@@ -609,8 +471,15 @@ function closeModal(id){document.getElementById(id).classList.add('hidden')}
 function toggleLoginPass(){
   var inp=document.getElementById('loginPass');
   var icon=document.getElementById('togglePassIcon');
-  if(inp.type==='password'){inp.type='text';icon.classList.remove('fa-eye');icon.classList.add('fa-eye-slash');}
-  else{inp.type='password';icon.classList.remove('fa-eye-slash');icon.classList.add('fa-eye');}
+  if(inp.type==='password'){
+    inp.type='text';
+    icon.classList.remove('fa-eye');
+    icon.classList.add('fa-eye-slash');
+  } else {
+    inp.type='password';
+    icon.classList.remove('fa-eye-slash');
+    icon.classList.add('fa-eye');
+  }
 }
 async function handleLogin(){
   var u=document.getElementById('loginUser').value.trim();
@@ -618,7 +487,7 @@ async function handleLogin(){
   var errEl=document.getElementById('loginError');errEl.classList.add('hidden');
   if(!u||!p){errEl.classList.remove('hidden');errEl.querySelector('span').textContent='Username dan password harus diisi';return}
   
-  await fetchAllData();
+  await fetchAllData(); // Load data from supabase before entering app
   
   var found=null;
   for(var i=0;i<DAFTAR_USER.length;i++){if(DAFTAR_USER[i].username===u&&DAFTAR_USER[i].password===p){found=DAFTAR_USER[i];break}}
@@ -669,6 +538,7 @@ function navigateTo(pageId,el){
 }
 function navigateFromCard(pageId){navigateTo(pageId,null)}
 function destroyAllCharts(){var k=Object.keys(chartInstances);for(var i=0;i<k.length;i++){try{chartInstances[k[i]].destroy()}catch(e){}}chartInstances={}}
+
 
 /* ================================================================
    RENDER PAGES
@@ -722,12 +592,6 @@ function renderProduksi(){
   var kar=dbGet('kar',[]),opts='';
   for(var i=0;i<kar.length;i++)if(kar[i].status==='Aktif')opts+='<option value="'+kar[i].id+'">'+kar[i].nama+' ('+kar[i].bagian+')</option>';
   var prodOpts='';for(var j=0;j<PRODUK_LIST.length;j++)prodOpts+='<option value="'+PRODUK_LIST[j]+'">'+PRODUK_LIST[j]+'</option>';
-  
-  // Tombol Copy Paste hanya untuk admin & operator
-  var copyPasteBtn = hasRole('admin,operator') 
-    ? '<button onclick="openCopyPasteModal()" class="btn-green px-4 py-2.5 rounded-lg text-sm whitespace-nowrap"><i class="fa-solid fa-clipboard mr-1.5"></i>Copy Paste Data</button>'
-    : '';
-  
   return'<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">'+
     '<div class="lg:col-span-1"><div class="bg-white rounded-xl p-5 border border-gray-100 lg:sticky lg:top-24"><h3 class="font-display font-semibold text-gray-900 mb-4">Input Produksi</h3><div class="space-y-3">'+
       '<div><label class="block text-gray-600 text-xs font-medium mb-1">Tanggal</label><input id="prodTanggal" type="date" class="field-input w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition"></div>'+
@@ -744,10 +608,7 @@ function renderProduksi(){
     '</div></div></div>'+
     '<div class="lg:col-span-2"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">'+
       '<div class="relative w-full sm:flex-1 sm:max-w-sm"><i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i><input id="searchProduksi" type="text" placeholder="Cari..." oninput="refreshProduksiTable()" class="field-input w-full border border-gray-200 rounded-lg pl-10 pr-4 py-2.5 text-sm transition"></div>'+
-      '<div class="flex gap-2">'+
-        '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition w-full sm:w-auto">'+
-        copyPasteBtn+
-      '</div>'+
+      '<input id="filterTanggal" type="date" onchange="refreshProduksiTable()" class="field-input border border-gray-200 rounded-lg px-3 py-2.5 text-sm transition w-full sm:w-auto">'+
     '</div><div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-3 py-3 text-left">Tanggal</th><th class="px-3 py-3 text-left">Karyawan</th><th class="px-3 py-3 text-left">Produk</th><th class="px-3 py-3 text-right">PCS</th><th class="px-3 py-3 text-right">Harga</th><th class="px-3 py-3 text-right">Total</th>'+(hasRole('admin,operator')?'<th class="px-3 py-3 text-center">Aksi</th>':'')+'</tr></thead><tbody id="produksiTableBody"></tbody></table></div><div id="produksiEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-box-open text-3xl mb-3 block"></i><p>Belum ada data</p></div></div></div>'+
   '</div>';
 }
@@ -848,6 +709,7 @@ function renderRekap(){
   '<div id="rekapEmpty" class="hidden p-10 text-center text-gray-400"><i class="fa-solid fa-clipboard text-3xl mb-3 block"></i><p>Belum ada data</p></div></div>';
 }
 function renderRanking(){
+  // On mobile, podium cards stack vertically using grid-cols-1 and take full width
   return'<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="rankingPodium"></div><div class="bg-white rounded-xl border border-gray-100 overflow-hidden"><div class="p-4 border-b border-gray-100"><h3 class="font-display font-semibold text-gray-900 text-sm">Daftar Lengkap</h3></div><div class="overflow-x-auto"><table class="data-table w-full text-sm"><thead><tr><th class="px-4 py-3 text-center">#</th><th class="px-4 py-3 text-left">Nama</th><th class="px-4 py-3 text-left">Bagian</th><th class="px-4 py-3 text-right">Total PCS</th><th class="px-4 py-3 text-right">Total Upah</th><th class="px-4 py-3 text-left">Performa</th></tr></thead><tbody id="rankingTableBody"></tbody></table></div></div>';
 }
 function renderTarget(){
@@ -1159,9 +1021,11 @@ async function handleRestoreFile(event){
       if(!data._meta||data._meta.app!=='ECO_SPORT'){showToast('File bukan backup ECO SPORT yang valid','error');return}
       
       showLoading();
+      // Hapus data lama di Supabase
       await db.from('produksi').delete().neq('id', 0);
       await db.from('karyawan').delete().neq('id', 0);
 
+      // Insert data baru
       if(data.eco_kar) await db.from('karyawan').insert(data.eco_kar);
       if(data.eco_prod) await db.from('produksi').insert(data.eco_prod);
       if(data.eco_tgt) await db.from('target').upsert(data.eco_tgt);
@@ -1206,404 +1070,6 @@ function initLaporanPage(){
       }
     });
   }
-}
-
-/* ================================================================
-   COPY PASTE PRODUKSI - FUNGSI BARU
-   ================================================================ */
-function openCopyPasteModal(){
-  // Reset state
-  pasteParsedData = [];
-  document.getElementById('pasteTextarea').value = '';
-  document.getElementById('pastePreviewWrap').classList.add('hidden');
-  document.getElementById('pasteSummary').classList.add('hidden');
-  document.getElementById('pastePreviewBody').innerHTML = '';
-  document.getElementById('btnSaveBulkProduksi').disabled = true;
-  document.getElementById('saveBulkCount').textContent = '';
-  document.getElementById('modalCopyPaste').classList.remove('hidden');
-}
-
-function copyPasteTemplate(){
-  var template = 'Tanggal\tNama Karyawan\tJenis Produk\tJumlah PCS\tHarga/PCS\tKeterangan\n' +
-                 todayStr() + '\t(nama karyawan)\tBaju Printing\t10\t5000\t-\n' +
-                 todayStr() + '\t(nama karyawan)\tCelana Printing\t5\t3000\t-';
-  
-  navigator.clipboard.writeText(template).then(function(){
-    showToast('Template berhasil disalin ke clipboard','success');
-  }).catch(function(){
-    // Fallback
-    var ta=document.createElement('textarea');
-    ta.value=template;document.body.appendChild(ta);ta.select();
-    try{document.execCommand('copy');showToast('Template berhasil disalin','success')}catch(e){showToast('Gagal menyalin template','error')}
-    document.body.removeChild(ta);
-  });
-}
-
-function downloadPasteTemplate(){
-  try{
-    var wb=XLSX.utils.book_new();
-    var wsData=[
-      ['Tanggal','Nama Karyawan','Jenis Produk','Jumlah PCS','Harga/PCS','Keterangan'],
-      [todayStr(),'Contoh Nama','Baju Printing',10,5000,'-'],
-      [todayStr(),'Contoh Nama','Celana Printing',5,3000,'-']
-    ];
-    var ws=XLSX.utils.aoa_to_sheet(wsData);
-    ws['!cols']=[{wch:12},{wch:25},{wch:20},{wch:12},{wch:12},{wch:20}];
-    XLSX.utils.book_append_sheet(wb,ws,'Template');
-    XLSX.writeFile(wb,'Template_Produksi_ECO_SPORT.xlsx');
-    showToast('Template Excel berhasil diunduh','success');
-  }catch(e){
-    console.error(e);
-    showToast('Gagal download template: '+e.message,'error');
-  }
-}
-
-function loadPasteExample(){
-  var t = todayStr();
-  var kar = dbGet('kar',[]).filter(function(k){return k.status==='Aktif'});
-  var nama1 = kar.length > 0 ? kar[0].nama : 'Budi';
-  var nama2 = kar.length > 1 ? kar[1].nama : (kar.length > 0 ? kar[0].nama : 'Siti');
-  
-  var example = 'Tanggal\tNama Karyawan\tJenis Produk\tJumlah PCS\tHarga/PCS\tKeterangan\n' +
-                t + '\t' + nama1 + '\tBaju Printing\t10\t5000\tOrder A\n' +
-                t + '\t' + nama2 + '\tCelana Printing\t5\t3000\tOrder B\n' +
-                t + '\t' + nama1 + '\tKolor Printing\t15\t2000\t-\n' +
-                t + '\t' + nama2 + '\tJaket Printing\t3\t8000\tCustom';
-  
-  document.getElementById('pasteTextarea').value = example;
-  autoParsePaste();
-  showToast('Contoh data dimuat','info');
-}
-
-function clearPasteData(){
-  document.getElementById('pasteTextarea').value = '';
-  pasteParsedData = [];
-  document.getElementById('pastePreviewWrap').classList.add('hidden');
-  document.getElementById('pasteSummary').classList.add('hidden');
-  document.getElementById('btnSaveBulkProduksi').disabled = true;
-  document.getElementById('saveBulkCount').textContent = '';
-  document.getElementById('pastePreviewBody').innerHTML = '';
-}
-
-// Auto-parse dengan debounce
-var pasteParseTimer = null;
-function autoParsePaste(){
-  if(pasteParseTimer) clearTimeout(pasteParseTimer);
-  pasteParseTimer = setTimeout(function(){
-    parsePastedData();
-  }, 400);
-}
-
-function parsePastedData(){
-  var raw = document.getElementById('pasteTextarea').value.trim();
-  if(!raw){
-    document.getElementById('pastePreviewWrap').classList.add('hidden');
-    document.getElementById('pasteSummary').classList.add('hidden');
-    document.getElementById('btnSaveBulkProduksi').disabled = true;
-    document.getElementById('saveBulkCount').textContent = '';
-    pasteParsedData = [];
-    return;
-  }
-  
-  // Split by newlines (handle \r\n and \n)
-  var lines = raw.split(/\r?\n/);
-  var rows = [];
-  for(var i=0; i<lines.length; i++){
-    var line = lines[i].trim();
-    if(!line) continue;
-    // Detect delimiter: tab, semicolon, or comma
-    var cols;
-    if(line.indexOf('\t') !== -1){
-      cols = line.split('\t');
-    } else if(line.indexOf(';') !== -1){
-      cols = line.split(';');
-    } else if(line.indexOf(',') !== -1){
-      // Hanya pakai koma jika ada lebih dari 1 koma (antisipasi nama dengan koma)
-      var commaCount = (line.match(/,/g) || []).length;
-      if(commaCount >= 3) cols = line.split(',');
-      else cols = [line];
-    } else {
-      cols = [line];
-    }
-    // Trim each column
-    for(var c=0; c<cols.length; c++) cols[c] = cols[c].trim();
-    rows.push(cols);
-  }
-  
-  // Detect & skip header
-  var startIdx = 0;
-  if(rows.length > 0){
-    var firstRow = rows[0];
-    var isHeader = false;
-    // Cek apakah baris pertama berisi header
-    var headerKeywords = ['tanggal','nama','karyawan','produk','jenis','jumlah','harga','keterangan','pcs','upah'];
-    var matchCount = 0;
-    for(var h=0; h<firstRow.length; h++){
-      var lc = firstRow[h].toLowerCase();
-      for(var k=0; k<headerKeywords.length; k++){
-        if(lc.indexOf(headerKeywords[k]) !== -1){
-          matchCount++;
-          break;
-        }
-      }
-    }
-    if(matchCount >= 2) isHeader = true;
-    
-    // Jika baris pertama tidak bisa di-parse sebagai tanggal, anggap header
-    if(!isHeader && firstRow.length >= 4){
-      var testDate = parseDateInput(firstRow[0]);
-      var testQty = parseInt(firstRow[3]);
-      if(!testDate && isNaN(testQty)) isHeader = true;
-    }
-    
-    if(isHeader) startIdx = 1;
-  }
-  
-  // Parse each row
-  var karList = dbGet('kar',[]);
-  var parsed = [];
-  for(var i=startIdx; i<rows.length; i++){
-    var cols = rows[i];
-    var rowObj = {
-      rowNum: i - startIdx + 1,
-      raw: cols,
-      tanggal: '',
-      id_karyawan: null,
-      namaKaryawan: '',
-      jenis_produk: '',
-      jumlah_pcs: 0,
-      harga_pcs: 0,
-      total_upah: 0,
-      keterangan: '',
-      valid: true,
-      errors: []
-    };
-    
-    // Tanggal (kolom 0)
-    if(cols.length > 0){
-      var tgl = parseDateInput(cols[0]);
-      if(tgl){
-        rowObj.tanggal = tgl;
-      } else {
-        rowObj.valid = false;
-        rowObj.errors.push('Tanggal tidak valid');
-      }
-    } else {
-      rowObj.valid = false;
-      rowObj.errors.push('Tanggal kosong');
-    }
-    
-    // Nama Karyawan (kolom 1)
-    if(cols.length > 1 && cols[1]){
-      rowObj.namaKaryawan = cols[1];
-      var kObj = findKaryawanByNama(cols[1]);
-      if(kObj){
-        rowObj.id_karyawan = kObj.id;
-      } else {
-        rowObj.valid = false;
-        rowObj.errors.push('Karyawan tidak ditemukan');
-      }
-    } else {
-      rowObj.valid = false;
-      rowObj.errors.push('Karyawan kosong');
-    }
-    
-    // Jenis Produk (kolom 2)
-    if(cols.length > 2 && cols[2]){
-      var prod = findProduk(cols[2]);
-      if(prod){
-        rowObj.jenis_produk = prod;
-      } else {
-        rowObj.valid = false;
-        rowObj.errors.push('Produk tidak valid');
-      }
-    } else {
-      rowObj.valid = false;
-      rowObj.errors.push('Produk kosong');
-    }
-    
-    // Jumlah PCS (kolom 3)
-    if(cols.length > 3 && cols[3] !== ''){
-      var qty = parseInt(cols[3].replace(/[^\d-]/g,''));
-      if(!isNaN(qty) && qty > 0){
-        rowObj.jumlah_pcs = qty;
-      } else {
-        rowObj.valid = false;
-        rowObj.errors.push('PCS harus > 0');
-      }
-    } else {
-      rowObj.valid = false;
-      rowObj.errors.push('PCS kosong');
-    }
-    
-    // Harga/PCS (kolom 4, optional - default ke HARGA_DAFTAR)
-    if(cols.length > 4 && cols[4] && cols[4] !== '-'){
-      var hrg = parseInt(cols[4].replace(/[^\d-]/g,''));
-      if(!isNaN(hrg) && hrg >= 0){
-        rowObj.harga_pcs = hrg;
-      } else {
-        rowObj.harga_pcs = HARGA_DAFTAR[rowObj.jenis_produk] || 0;
-      }
-    } else {
-      rowObj.harga_pcs = HARGA_DAFTAR[rowObj.jenis_produk] || 0;
-    }
-    
-    // Keterangan (kolom 5, optional)
-    if(cols.length > 5 && cols[5]){
-      rowObj.keterangan = cols[5];
-    }
-    
-    // Hitung total upah
-    rowObj.total_upah = rowObj.jumlah_pcs * rowObj.harga_pcs;
-    
-    parsed.push(rowObj);
-  }
-  
-  pasteParsedData = parsed;
-  renderPastePreview(parsed);
-}
-
-// Parse berbagai format tanggal
-function parseDateInput(input){
-  if(!input) return null;
-  input = input.trim();
-  
-  // YYYY-MM-DD (ISO)
-  if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(input)){
-    var p = input.split('-');
-    var y = parseInt(p[0]), m = parseInt(p[1]), d = parseInt(p[2]);
-    var dt = new Date(y, m-1, d);
-    if(dt.getFullYear()===y && dt.getMonth()===m-1 && dt.getDate()===d){
-      return y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-    }
-  }
-  
-  // DD/MM/YYYY atau DD-MM-YYYY
-  if(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{4}$/.test(input)){
-    var p2 = input.split(/[\/\-]/);
-    var d2 = parseInt(p2[0]), m2 = parseInt(p2[1]), y2 = parseInt(p2[2]);
-    var dt2 = new Date(y2, m2-1, d2);
-    if(dt2.getFullYear()===y2 && dt2.getMonth()===m2-1 && dt2.getDate()===d2){
-      return y2 + '-' + String(m2).padStart(2,'0') + '-' + String(d2).padStart(2,'0');
-    }
-  }
-  
-  // DD/MM/YY (2 digit year)
-  if(/^\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2}$/.test(input)){
-    var p3 = input.split(/[\/\-]/);
-    var d3 = parseInt(p3[0]), m3 = parseInt(p3[1]), y3 = parseInt(p3[2]);
-    if(y3 < 100) y3 += 2000;
-    var dt3 = new Date(y3, m3-1, d3);
-    if(dt3.getFullYear()===y3 && dt3.getMonth()===m3-1 && dt3.getDate()===d3){
-      return y3 + '-' + String(m3).padStart(2,'0') + '-' + String(d3).padStart(2,'0');
-    }
-  }
-  
-  return null;
-}
-
-function renderPastePreview(data){
-  var wrap = document.getElementById('pastePreviewWrap');
-  var summary = document.getElementById('pasteSummary');
-  var body = document.getElementById('pastePreviewBody');
-  var btnSave = document.getElementById('btnSaveBulkProduksi');
-  var saveCount = document.getElementById('saveBulkCount');
-  
-  if(data.length === 0){
-    wrap.classList.add('hidden');
-    summary.classList.add('hidden');
-    btnSave.disabled = true;
-    saveCount.textContent = '';
-    return;
-  }
-  
-  wrap.classList.remove('hidden');
-  summary.classList.remove('hidden');
-  
-  var validCount = 0;
-  var invalidCount = 0;
-  var html = '';
-  
-  for(var i=0; i<data.length; i++){
-    var row = data[i];
-    if(row.valid) validCount++;
-    else invalidCount++;
-    
-    var rowClass = row.valid ? 'paste-row-valid' : 'paste-row-invalid';
-    var statusBadge = row.valid 
-      ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700"><i class="fa-solid fa-check mr-1"></i>OK</span>'
-      : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700" title="'+row.errors.join(', ')+'"><i class="fa-solid fa-xmark mr-1"></i>Error</span>';
-    
-    var errorText = row.valid ? '' : '<div class="text-xs text-red-600 mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i>'+row.errors.join('; ')+'</div>';
-    
-    html += '<tr class="'+rowClass+'">'+
-      '<td class="px-3 py-2 text-gray-500 text-xs">'+row.rowNum+'</td>'+
-      '<td class="px-3 py-2">'+statusBadge+'</td>'+
-      '<td class="px-3 py-2 text-xs">'+(row.tanggal || '<span class="text-red-500">?</span>')+'</td>'+
-      '<td class="px-3 py-2 text-xs">'+(row.namaKaryawan || '<span class="text-red-500">?</span>')+'</td>'+
-      '<td class="px-3 py-2 text-xs">'+(row.jenis_produk || '<span class="text-red-500">?</span>')+'</td>'+
-      '<td class="px-3 py-2 text-right text-xs">'+(row.jumlah_pcs || 0)+'</td>'+
-      '<td class="px-3 py-2 text-right text-xs">'+formatRupiah(row.harga_pcs)+'</td>'+
-      '<td class="px-3 py-2 text-right text-xs font-semibold">'+formatRupiah(row.total_upah)+'</td>'+
-      '<td class="px-3 py-2 text-xs text-gray-500">'+(row.keterangan || '-')+'</td>'+
-    '</tr>';
-  }
-  
-  body.innerHTML = html;
-  
-  document.getElementById('pasteTotalRows').textContent = data.length;
-  document.getElementById('pasteValidRows').textContent = validCount;
-  document.getElementById('pasteInvalidRows').textContent = invalidCount;
-  
-  if(validCount > 0){
-    btnSave.disabled = false;
-    saveCount.textContent = '(' + validCount + ')';
-  } else {
-    btnSave.disabled = true;
-    saveCount.textContent = '';
-  }
-}
-
-async function saveBulkProduksi(){
-  var validData = pasteParsedData.filter(function(r){return r.valid});
-  if(validData.length === 0){
-    showToast('Tidak ada data valid untuk disimpan','warning');
-    return;
-  }
-  
-  showConfirm('Simpan '+validData.length+' data produksi ke database?', async function(){
-    // Dapatkan max id
-    var prodList = dbGet('prod', []);
-    var maxId = prodList.reduce(function(max, p){return Math.max(max, p.id)}, 0);
-    
-    // Siapkan array untuk insert
-    var insertData = [];
-    for(var i=0; i<validData.length; i++){
-      var r = validData[i];
-      maxId++;
-      insertData.push({
-        id: maxId,
-        tanggal: r.tanggal,
-        id_karyawan: r.id_karyawan,
-        jenis_produk: r.jenis_produk,
-        jumlah_pcs: r.jumlah_pcs,
-        harga_pcs: r.harga_pcs,
-        total_upah: r.total_upah,
-        keterangan: r.keterangan
-      });
-    }
-    
-    // Bulk insert ke Supabase
-    var success = await dbBulkInsertProduksi(insertData);
-    
-    if(success){
-      showToast(validData.length + ' data produksi berhasil disimpan!', 'success');
-      closeModal('modalCopyPaste');
-      // Refresh tabel produksi jika sedang ditampilkan
-      var tbody = document.getElementById('produksiTableBody');
-      if(tbody) refreshProduksiTable();
-    }
-  });
 }
 
 /* ================================================================
@@ -1681,6 +1147,8 @@ function renderLaporan(){
   for(var i=0;i<kar.length;i++)if(kar[i].status==='Aktif')opts+='<option value="'+kar[i].id+'">'+kar[i].nama+' ('+kar[i].bagian+')</option>';
 
   return '<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">'+
+
+    /* ===== CETAK LAPORAN ===== */
     '<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">'+
       '<div class="p-4 border-b border-gray-100 flex items-center gap-3">'+
         '<div class="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-print text-red-600"></i></div>'+
@@ -1699,6 +1167,8 @@ function renderLaporan(){
         '<button onclick="handleCetakLaporan()" class="btn-red w-full py-2.5 rounded-lg text-sm"><i class="fa-solid fa-print mr-1.5"></i>CETAK LAPORAN</button>'+
       '</div>'+
     '</div>'+
+
+    /* ===== EXPORT DATA ===== */
     '<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">'+
       '<div class="p-4 border-b border-gray-100 flex items-center gap-3">'+
         '<div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-file-export text-blue-500"></i></div>'+
@@ -1718,6 +1188,8 @@ function renderLaporan(){
         '</div>'+
       '</div>'+
     '</div>'+
+
+    /* ===== BACKUP & RESTORE ===== */
     '<div class="bg-white rounded-xl border border-gray-100 overflow-hidden">'+
       '<div class="p-4 border-b border-gray-100 flex items-center gap-3">'+
         '<div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-database text-amber-500"></i></div>'+
@@ -1741,6 +1213,7 @@ function renderLaporan(){
         '<div class="flex items-center gap-2 text-xs text-gray-400"><i class="fa-solid fa-shield-halved"></i><span>Data saat ini: <strong id="backupStatInfo" class="text-gray-600">-</strong></span></div>'+
       '</div>'+
     '</div>'+
+
   '</div>';
 }
 
@@ -1845,6 +1318,7 @@ async function saveKaryawan(){
     await dbSaveSupabase('kar', obj);
     showToast('Data karyawan diperbarui');
   } else {
+    // Dapatkan max id
     var karList = dbGet('kar', []);
     var maxId = karList.reduce((max, k) => Math.max(max, k.id), 0);
     obj.id = maxId + 1;
@@ -1887,13 +1361,13 @@ function calcProduksiTotal(){
 }
 function resetProduksiForm(){
   editingProdId=null;
-  var elT=document.getElementById('prodTanggal');if(elT)elT.value=todayStr();
-  var elK=document.getElementById('prodKaryawan');if(elK)elK.value='';
-  var elJ=document.getElementById('prodJenis');if(elJ)elJ.value='';
-  var elQ=document.getElementById('prodQty');if(elQ)elQ.value='';
-  var elH=document.getElementById('prodHarga');if(elH)elH.value='';
-  var elKet=document.getElementById('prodKet');if(elKet)elKet.value='';
-  var elTot=document.getElementById('prodTotal');if(elTot)elTot.textContent='Rp 0';
+  document.getElementById('prodTanggal').value=todayStr();
+  document.getElementById('prodKaryawan').value='';
+  document.getElementById('prodJenis').value='';
+  document.getElementById('prodQty').value='';
+  document.getElementById('prodHarga').value='';
+  document.getElementById('prodKet').value='';
+  document.getElementById('prodTotal').textContent='Rp 0';
   var btnSave=document.getElementById('btnSaveProduksi');if(btnSave)btnSave.innerHTML='<i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN';
   var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.add('hidden');
 }
@@ -1913,6 +1387,29 @@ function editProduksi(id){
   var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.remove('hidden');
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+// FUNGSI COPY PASTE (DUPLICATE) DATA PRODUKSI
+function copyProduksi(id){
+  var prod=dbGet('prod',[]);var p=null;
+  for(var i=0;i<prod.length;i++){if(prod[i].id===id){p=prod[i];break}}
+  if(!p)return;
+  
+  editingProdId=null; // Set null agar dianggap data baru saat di save
+  document.getElementById('prodTanggal').value=p.tanggal;
+  document.getElementById('prodKaryawan').value=''; // Kosongkan karyawan agar dipilih ulang
+  document.getElementById('prodJenis').value=p.jenis_produk;
+  document.getElementById('prodQty').value=p.jumlah_pcs;
+  document.getElementById('prodHarga').value=p.harga_pcs;
+  document.getElementById('prodKet').value=p.keterangan||'';
+  calcProduksiTotal();
+  
+  var btnSave=document.getElementById('btnSaveProduksi');if(btnSave)btnSave.innerHTML='<i class="fa-solid fa-floppy-disk mr-1.5"></i>SIMPAN';
+  var btnBatal=document.getElementById('btnBatalEdit');if(btnBatal)btnBatal.classList.remove('hidden');
+  
+  window.scrollTo({top:0,behavior:'smooth'});
+  showToast('Data berhasil disalin, silakan pilih karyawan lain lalu klik Simpan','info');
+}
+
 async function saveProduksi(){
   var kid=parseInt(document.getElementById('prodKaryawan').value);
   var jenis=document.getElementById('prodJenis').value;
@@ -1954,7 +1451,7 @@ function refreshProduksiTable(){
   if(!body)return;
   if(filtered.length===0){body.innerHTML='';empty.classList.remove('hidden');return}
   empty.classList.add('hidden');var h='';var max=Math.min(filtered.length,50);
-  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center"><button onclick="editProduksi('+p.id+')" class="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
+  for(var i=0;i<max;i++){var p=filtered[i],k=findKaryawan(p.id_karyawan);h+='<tr><td class="px-3 py-2.5 text-gray-500 text-xs">'+formatTanggal(p.tanggal)+'</td><td class="px-3 py-2.5 text-gray-900">'+(k?k.nama:'?')+'</td><td class="px-3 py-2.5 text-gray-600">'+p.jenis_produk+'</td><td class="px-3 py-2.5 text-right text-gray-900">'+p.jumlah_pcs+'</td><td class="px-3 py-2.5 text-right text-gray-500">'+formatRupiah(p.harga_pcs)+'</td><td class="px-3 py-2.5 text-right font-semibold text-gray-900">'+formatRupiah(p.total_upah)+'</td>'+(hasRole('admin,operator')?'<td class="px-3 py-2.5 text-center whitespace-nowrap"><button onclick="editProduksi('+p.id+')" class="text-blue-500 hover:text-blue-700 mr-2 cursor-pointer" title="Edit"><i class="fa-solid fa-pen-to-square"></i></button><button onclick="copyProduksi('+p.id+')" class="text-green-500 hover:text-green-700 mr-2 cursor-pointer" title="Salin Data"><i class="fa-solid fa-copy"></i></button><button onclick="deleteProduksi('+p.id+')" class="text-red-500 hover:text-red-700 cursor-pointer" title="Hapus"><i class="fa-solid fa-trash"></i></button></td>':'')+'</tr>'}
   body.innerHTML=h;
 }
 
@@ -2075,6 +1572,7 @@ function rebuildAllCharts(){
   if(el('gsSumKar'))el('gsSumKar').textContent=karCount;
   if(el('gsSumAvg'))el('gsSumAvg').textContent=formatAngka(avgPcs)+' PCS';
 
+  /* 1. TREN HARIAN */
   if(chartInstances.tren)try{chartInstances.tren.destroy()}catch(e){}
   var trenMap={};var range=getFilteredRange();var d=new Date(range.start);
   while(d<=range.end){var key=d.toISOString().split('T')[0];trenMap[key]=0;d.setDate(d.getDate()+1)}
@@ -2089,6 +1587,7 @@ function rebuildAllCharts(){
   var ctxTren=el('chartTren');
   if(ctxTren){chartInstances.tren=new Chart(ctxTren,{type:chartJsType,data:{labels:trenShortLabels,datasets:[trenDataset]},options:{responsive:true,maintainAspectRatio:false,animation:grafikState.showAnimation?{duration:600}:false,scales:isRadarType||isPolarType?{}:baseScaleOpts(true),plugins:basePlugins()},plugins:[dataLabelPlugin()]})}
 
+  /* 2. PER KARYAWAN */
   if(chartInstances.karyawan)try{chartInstances.karyawan.destroy()}catch(e){}
   var karDataMap={},karUpahMap={};
   for(var k2=0;k2<filtered.length;k2++){var fk=filtered[k2].id_karyawan;if(!karDataMap[fk]){karDataMap[fk]=0;karUpahMap[fk]=0}karDataMap[fk]+=filtered[k2].jumlah_pcs;karUpahMap[fk]+=filtered[k2].total_upah}
@@ -2101,6 +1600,7 @@ function rebuildAllCharts(){
   var ctxKar=el('chartKaryawan');
   if(ctxKar&&karEntries.length>0){chartInstances.karyawan=new Chart(ctxKar,{type:'bar',data:{labels:karLabels,datasets:[{label:'PCS',data:karPcsData,backgroundColor:colors[0]+'cc',borderColor:colors[0],borderWidth:1,borderRadius:6,barPercentage:0.6},{label:'Upah (Rp)',data:karUpahData,backgroundColor:colors[1]+'cc',borderColor:colors[1],borderWidth:1,borderRadius:6,barPercentage:0.6,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:karEntries.length>6?'y':'x',animation:grafikState.showAnimation?{duration:600}:false,scales:{x:{grid:{display:grafikState.showGrid,color:getChartGridColor()},ticks:{color:getChartTextColor(),font:{size:10},maxRotation:45},beginAtZero:true},y:{position:karEntries.length>6?'top':'left',grid:{display:grafikState.showGrid,color:getChartGridColor()},ticks:{color:getChartTextColor(),font:{size:10}},beginAtZero:true,title:{display:true,text:'PCS',color:getChartTextColor(),font:{size:10}}},y1:{position:karEntries.length>6?'bottom':'right',grid:{display:false},ticks:{color:getChartTextColor(),font:{size:10},callback:function(v){return v>=1000000?(v/1000000).toFixed(1)+'jt':v>=1000?(v/1000).toFixed(0)+'rb':v}},beginAtZero:true,title:{display:true,text:'Upah (Rp)',color:getChartTextColor(),font:{size:10}}}},plugins:basePlugins()},plugins:[dataLabelPlugin()]})}
 
+  /* 3. DISTRIBUSI PRODUK */
   if(chartInstances.produk)try{chartInstances.produk.destroy()}catch(e){}
   var prodMap={};for(var p2=0;p2<filtered.length;p2++){var pr=filtered[p2].jenis_produk;if(!prodMap[pr])prodMap[pr]=0;prodMap[pr]+=filtered[p2].jumlah_pcs}
   var prodEntries=[];for(var pn in prodMap)prodEntries.push({nama:pn,pcs:prodMap[pn]});prodEntries.sort(function(a,b){return b.pcs-a.pcs});
@@ -2108,17 +1608,20 @@ function rebuildAllCharts(){
   var ctxProd=el('chartProduk');
   if(ctxProd&&prodEntries.length>0){chartInstances.produk=new Chart(ctxProd,{type:'doughnut',data:{labels:prodLabels,datasets:[{data:prodData,backgroundColor:prodColors.map(function(c){return c+'dd'}),borderColor:prodColors,borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',animation:grafikState.showAnimation?{duration:600}:false,plugins:Object.assign({},basePlugins(),{legend:Object.assign({},basePlugins().legend,{position:'right'})})},plugins:[dataLabelPlugin()]})}
 
+  /* 4. PERBANDINGAN BAGIAN */
   if(chartInstances.bagian)try{chartInstances.bagian.destroy()}catch(e){}
   var bagPcs={Jahit:0,Desain:0},bagUpah={Jahit:0,Desain:0};
   for(var b=0;b<filtered.length;b++){var kObj=findKaryawanObj(filtered[b].id_karyawan);if(kObj){bagPcs[kObj.bagian]=(bagPcs[kObj.bagian]||0)+filtered[b].jumlah_pcs;bagUpah[kObj.bagian]=(bagUpah[kObj.bagian]||0)+filtered[b].total_upah}}
   var ctxBag=el('chartBagian');
   if(ctxBag){chartInstances.bagian=new Chart(ctxBag,{type:'bar',data:{labels:['Jahit','Desain'],datasets:[{label:'Total PCS',data:[bagPcs.Jahit||0,bagPcs.Desain||0],backgroundColor:colors[0]+'cc',borderColor:colors[0],borderWidth:1,borderRadius:8,barPercentage:0.5},{label:'Total Upah',data:[bagUpah.Jahit||0,bagUpah.Desain||0],backgroundColor:colors[2]+'cc',borderColor:colors[2],borderWidth:1,borderRadius:8,barPercentage:0.5,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,animation:grafikState.showAnimation?{duration:600}:false,scales:{x:{grid:{display:grafikState.showGrid,color:getChartGridColor()},ticks:{color:getChartTextColor(),font:{size:12,weight:'600'}}},y:{position:'left',grid:{display:grafikState.showGrid,color:getChartGridColor()},ticks:{color:getChartTextColor(),font:{size:10}},beginAtZero:true,title:{display:true,text:'PCS',color:getChartTextColor(),font:{size:10}}},y1:{position:'right',grid:{display:false},ticks:{color:getChartTextColor(),font:{size:10},callback:function(v){return v>=1000000?(v/1000000).toFixed(1)+'jt':v>=1000?(v/1000).toFixed(0)+'rb':v}},beginAtZero:true,title:{display:true,text:'Upah (Rp)',color:getChartTextColor(),font:{size:10}}}},plugins:basePlugins()},plugins:[dataLabelPlugin()]})}
 
+  /* 5. TOP 5 */
   if(chartInstances.top5)try{chartInstances.top5.destroy()}catch(e){}
   var top5=karEntries.slice(0,5).reverse();var top5Labels=top5.map(function(e){return findKarName(e.id)});var top5Data=top5.map(function(e){return e.pcs});var top5Colors=top5.map(function(_,i){return colors[i%colors.length]});
   var ctxTop=el('chartTop5');
   if(ctxTop&&top5.length>0){chartInstances.top5=new Chart(ctxTop,{type:'bar',data:{labels:top5Labels,datasets:[{label:'Total PCS',data:top5Data,backgroundColor:top5Colors.map(function(c){return c+'cc'}),borderColor:top5Colors,borderWidth:1,borderRadius:6,barPercentage:0.55}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',animation:grafikState.showAnimation?{duration:600}:false,scales:{x:{grid:{display:grafikState.showGrid,color:getChartGridColor()},ticks:{color:getChartTextColor(),font:{size:10}},beginAtZero:true},y:{grid:{display:false},ticks:{color:getChartTextColor(),font:{size:11,weight:'500'}}}},plugins:basePlugins()},plugins:[dataLabelPlugin()]})}
 
+  /* 6. RADAR PER BAGIAN */
   if(chartInstances.radar)try{chartInstances.radar.destroy()}catch(e){}
   var radarProdList=PRODUK_LIST.slice(0,8);
   var radarJahit=radarProdList.map(function(pr){var s=0;for(var r=0;r<filtered.length;r++){if(filtered[r].jenis_produk===pr){var ko=findKaryawanObj(filtered[r].id_karyawan);if(ko&&ko.bagian==='Jahit')s+=filtered[r].jumlah_pcs}}return s});
@@ -2126,6 +1629,7 @@ function rebuildAllCharts(){
   var ctxRadar=el('chartRadar');
   if(ctxRadar){chartInstances.radar=new Chart(ctxRadar,{type:'radar',data:{labels:radarProdList,datasets:[{label:'Jahit',data:radarJahit,backgroundColor:colors[0]+'33',borderColor:colors[0],borderWidth:2,pointBackgroundColor:colors[0],pointRadius:3},{label:'Desain',data:radarDesain,backgroundColor:colors[3]+'33',borderColor:colors[3],borderWidth:2,pointBackgroundColor:colors[3],pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,animation:grafikState.showAnimation?{duration:600}:false,scales:{r:{grid:{color:getChartGridColor()},angleLines:{color:getChartGridColor()},pointLabels:{color:getChartTextColor(),font:{size:9}},ticks:{display:false},beginAtZero:true}},plugins:basePlugins()},plugins:[dataLabelPlugin()]})}
 
+  /* 7. DISTRIBUSI WAKTU */
   if(chartInstances.waktu)try{chartInstances.waktu.destroy()}catch(e){}
   var hourMap={};for(var h=6;h<=21;h++)hourMap[h]=0;
   for(var w=0;w<filtered.length;w++){var hash=0;var str=filtered[w].tanggal+''+filtered[w].id_karyawan;for(var ci=0;ci<str.length;ci++){hash=((hash<<5)-hash)+str.charCodeAt(ci);hash|=0}var hour=6+Math.abs(hash)%16;hourMap[hour]+=filtered[w].jumlah_pcs}
@@ -2143,6 +1647,9 @@ function initGrafikPage(){
   readGrafikSettings();rebuildAllCharts();
 }
 
+/* ================================================================
+   INIT LAPORAN & EXPORT
+   ================================================================ */
 function refreshLaporanTable(){
   var prod=dbGet('prod',[]);var kar=dbGet('kar',[]);
   var bagFilter=(document.getElementById('lapBagian')||{}).value||'';
